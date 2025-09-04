@@ -9,16 +9,21 @@ module.exports = defineConfig([
         settings: {
             'import/resolver': {
                 node: {
-                    extensions: ['.js', '.jsx', '.ts', '.tsx', '.png', '.gif'],
+                    extensions: ['.js', '.jsx', '.ts', '.tsx', '.png', '.gif', '.jpg', '.jpeg', '.svg'],
                     moduleDirectory: ['node_modules', '.']
                 },
                 alias: {
                     map: [
-                        ['@', './app']
+                        ['@', './app'],
+                        ['@/assets', './assets']
                     ],
-                    extensions: ['.js', '.jsx', '.ts', '.tsx', '.png', '.gif']
+                    extensions: ['.js', '.jsx', '.ts', '.tsx', '.png', '.gif', '.jpg', '.jpeg', '.svg']
                 }
-            }
-        }  // Added missing closing brace here
+            },
+            'import/extensions': ['.js', '.jsx', '.ts', '.tsx', '.png', '.gif', '.jpg', '.jpeg', '.svg']
+        },
+        rules: {
+            'import/no-unresolved': ['error', { ignore: ['\\.(png|gif|jpg|jpeg|svg)$'] }]
+        }
     },
 ]);
