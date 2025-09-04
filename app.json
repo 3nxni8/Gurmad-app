@@ -1,15 +1,21 @@
 {
   "expo": {
-    "name": "gurmad",
+    "name": "Gurmad",
     "slug": "gurmad",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "gurmad",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": {
+        "dark": "./assets/images/ios-dark.png",
+        "light": "./assets/images/ios-light.png",
+        "tinted": "./assets/images/ios-tinted.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,10 +34,18 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "light": {
+            "image": "./assets/images/splashScreen-light.png",
+            "imageWidth": 200,
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+          },
+          "dark": {
+            "image": "./assets/images/splashScreen-dark.png",
+            "imageWidth": 200,
+            "resizeMode": "contain",
+            "backgroundColor": "#168F4D"
+          }
         }
       ]
     ],
