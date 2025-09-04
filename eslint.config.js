@@ -14,7 +14,8 @@ module.exports = defineConfig([
                 },
                 alias: {
                     map: [
-                        ['@', '.']
+                        ['@', './app'],
+                        ['@/assets', './assets']
                     ],
                     extensions: ['.js', '.jsx', '.ts', '.tsx', '.png', '.gif', '.jpg', '.jpeg', '.svg']
                 }

@@ -4,7 +4,7 @@ import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 
-import {onboarding} from "../constants";
+import {onboarding} from "@/constants";
 
 
 const Home = () => {

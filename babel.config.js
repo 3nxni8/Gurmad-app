@@ -10,7 +10,8 @@ module.exports = function (api) {
         "module-resolver",
         {
           alias: {
-            "@": ".",
+            "@": "./app",
+            "@/assets": "./assets",
           },
           extensions: [".js", ".jsx", ".ts", ".tsx"],
         },
