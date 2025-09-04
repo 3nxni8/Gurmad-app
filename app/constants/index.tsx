@@ -1,6 +1,6 @@
-import onboarding1 from "@/assets/images/onboarding1.gif";
-import onboarding2 from "@/assets/images/onboarding2.png";
-import onboarding3 from "@/assets/images/onboarding3.gif";
+import onboarding1 from "@assets/images/onboarding1.png";
+import onboarding2 from "@assets/images/onboarding2.png";
+import onboarding3 from "@assets/images/onboarding3.gif";
 
 
 export const images = {
@@ -13,7 +13,7 @@ export const onboarding = [
         id: 1,
         title: "Community-Powered Fundraising.",
         description:
-            "Welcome to the trusted way to raise funds together. Our platform simplifies  contributions, ensuring every dollar is transparently tracked.",
+            "Welcome to the trusted way to raise funds together. Our platform simplifies  contributions,at LargeScale",
         image: images.onboarding1,
     },
     {
