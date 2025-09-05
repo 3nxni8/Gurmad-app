@@ -1,11 +1,10 @@
-import { router } from "expo-router";
+import { router, Link } from "expo-router";
 import { useState } from "react";
-import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
 
-
-import CustomButton from "@/components/customButton";
+import SsoButtons from "@/components/ssoButtons";
 import { icons } from "@/constants";
+import CustomButton from "@/components/customButton";
 
 
 const GoogleIcon = () =>
@@ -13,7 +12,7 @@ const GoogleIcon = () =>
            resizeMode="contain" />;
 const AppleIcon = () => <Image source={icons.appleIcon}  resizeMode="contain" />;
 const FacebookIcon = () => <Image source={icons.facebookIcon}  resizeMode="contain" />;
-const EmailIcon = () => <Image source={icons.emailIcon} resizeMode="contain" />;
+// const EmailIcon = () => <Image source={icons.emailIcon} resizeMode="contain" />;
 const LetsGetStarted = () => {
     // State or logic can be added here if needed
     const [isLoading, setIsLoading] = useState(false);
@@ -46,19 +45,15 @@ const LetsGetStarted = () => {
         }, 1000);
     };
 
-    const handleEmailPress = () => {
-        // Navigate to email sign-up page
-        router.replace("/(auth)/sign-up");
-    };
 
-    const handleLoginPress = () => {
-        // Navigate to login page
-        router.replace("/(auth)/login");
-    };
+
+    // const handleLoginPress = () => {
+    //     // Navigate to login page
+    //     router.push("/(auth)/login");
+    // };
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-
+        <ScrollView contentContainerStyle={styles.safeArea}>
             <View style={styles.container}>
                 {/* App Title and Description */}
                 <View style={styles.header}>
@@ -70,7 +65,7 @@ const LetsGetStarted = () => {
 
                 {/* SSO Buttons Section */}
                 <View style={styles.ssoSection}>
-                    <CustomButton
+                    <SsoButtons
                         title="Continue with Google"
                         onPress={handleGooglePress}
                         bgColor="#fff"
@@ -79,7 +74,7 @@ const LetsGetStarted = () => {
                         disabled={isLoading}
                     />
 
-                    <CustomButton
+                    <SsoButtons
                         title="Continue with Apple"
                         onPress={handleApplePress}
                         bgColor="#000"
@@ -88,7 +83,7 @@ const LetsGetStarted = () => {
                         disabled={isLoading}
                     />
 
-                    <CustomButton
+                    <SsoButtons
                         title="Continue with Facebook"
                         onPress={handleFacebookPress}
                         bgColor="#1877F2"
@@ -97,13 +92,7 @@ const LetsGetStarted = () => {
                         disabled={isLoading}
                     />
 
-                    <CustomButton
-                        title="Continue with Email"
-                        onPress={handleEmailPress}
-                        bgColor="#f1f1f1"
-                        textColor="#000"
-                        IconLeft={EmailIcon}
-                    />
+
                 </View>
 
                 {/* Separator */}
@@ -118,17 +107,20 @@ const LetsGetStarted = () => {
                     <CustomButton
                         title="Create Account"
                         onPress={() => router.replace("/(auth)/sign-up")}
-                        bgVariant="success"
+                        bgVariant="primary"
                         textVariant="default"
                     />
 
                     {/* Login Link */}
-                    <TouchableOpacity onPress={handleLoginPress}>
-                        <Text style={styles.loginText}>Already have an account? Sign in</Text>
-                    </TouchableOpacity>
+                    <View style={styles.loginRow}>
+                        <Text style={styles.loginText}>Already have an account?</Text>
+                        <Link href="/login" asChild>
+                            <Text style={styles.loginTextBlue}> Log in</Text>
+                        </Link>
+                    </View>
                 </View>
             </View>
-        </SafeAreaView>
+        </ScrollView>
     );
 };
 
@@ -147,7 +139,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 40,
+        paddingHorizontal: 20,
+        marginTop: 25,
     },
     header: {
         alignItems: "center",
@@ -161,15 +154,30 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 23,
-        color: "#00000",
+        color: "#AAAAAA",
         textAlign: "center",
         fontFamily: "PlusJakartaSans-Regular",
 
     },
-    loginText: {
+    accountSection: {
+        width: "100%",
+        alignItems: "center",
+    },
+    loginRow: {
+        flexDirection: "row",
+        alignItems: "center",
         marginTop: 20,
-        color: "#000000",
+    },
+    loginText: {
+        color: "#AAAAAA",
         fontSize: 16,
+        textDecorationLine: "underline",
+        fontFamily: "PlusJakartaSans-Bold",
+    },
+    loginTextBlue: {
+        color: "#0286FF",
+        fontSize: 16,
+        textDecorationLine: "underline",
         fontFamily: "PlusJakartaSans-Bold",
     },
     ssoSection: {
@@ -192,10 +200,6 @@ const styles = StyleSheet.create({
         color: "#666666",
         fontSize: 14,
         fontFamily: "PlusJakartaSans-Regular",
-    },
-    accountSection: {
-        width: "100%",
-        alignItems: "center",
     },
 
 });

@@ -36,7 +36,6 @@ const Home = () => {
                 dot={<View style={styles.dot} />}
                 activeDot={<View style={styles.activeDot} />}
                 onIndexChanged={(index) => setActiveIndex(index)}
-                paginationStyle={styles.pagination}
             >
                 {onboarding.map((item) => (
                     // Individual slide for each onboarding item
@@ -66,6 +65,8 @@ const Home = () => {
                         : swiperRef.current?.scrollBy(1)
                 }
 
+
+
             />
         </SafeAreaView>
     );
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "#fff",
+        
     },
     skipButton: {
         width: "100%",
@@ -140,9 +142,9 @@ const styles = StyleSheet.create({
         marginTop: 12,
     },
 
-    pagination: {
-        bottom: 100, // Move the dots upward
-    },
+    // pagination: {
+    //     bottom: 100, // Move the dots upward
+    // },
 });
 
 export default Home;

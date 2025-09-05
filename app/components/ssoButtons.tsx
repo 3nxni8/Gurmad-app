@@ -36,7 +36,7 @@ const getTextVariantStyle = (variant: ButtonProps["textVariant"]) => {
     }
 };
 
-const CustomButton = ({
+const SsoButtons = ({
                           onPress,
                           title,
                           bgVariant = "primary",
@@ -50,21 +50,20 @@ const CustomButton = ({
                       }: ButtonProps) => {
     // Determine background style - bgColor prop overrides bgVariant
     const backgroundStyle = bgColor ? { backgroundColor: bgColor } : getBgVariantStyle(bgVariant);
-    
+
     // Determine text style - textColor prop overrides textVariant
     const textStyle = textColor ? { color: textColor } : getTextVariantStyle(textVariant);
-    
+
     return (
         <TouchableOpacity
             onPress={onPress}
             style={[
                 {
-                    width: "95%",
-                    marginBottom:2.5,
+                    width: "100%",
+                    marginBottom:3.5,
                     borderRadius: 12,
-                    paddingVertical: 16,
-                    paddingHorizontal: 20,
-                    marginVertical: 8,
+                    padding: 10,
+                    marginVertical: 5,
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
@@ -101,4 +100,4 @@ const CustomButton = ({
     );
 };
 
-export default CustomButton;
+export default SsoButtons;

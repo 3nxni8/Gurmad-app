@@ -4,7 +4,7 @@ import onboarding3 from "@assets/images/onboarding3.gif";
 
 // icons import here
 import facebookIcon from "@assets/icons/facebookicon.png";
-import googleIcon from "@assets/icons/google.png";
+import googleIcon from "@assets/icons/googleicon.png";
 import appleIcon from "@assets/icons/appleicon.png";
 import emailIcon from "@assets/icons/email.png";
 
