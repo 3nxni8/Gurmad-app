@@ -68,55 +68,65 @@ const LetsGetStarted = () => {
                     </Text>
                 </View>
 
-                {/* SSO Buttons */}
-                <CustomButton
-                    title="Continue with Google"
-                    onPress={handleGooglePress}
-                    bgColor="#fff"
-                    textVariant="primary"
-                    IconLeft={GoogleIcon}
-                    disabled={isLoading}
-                />
+                {/* SSO Buttons Section */}
+                <View style={styles.ssoSection}>
+                    <CustomButton
+                        title="Continue with Google"
+                        onPress={handleGooglePress}
+                        bgColor="#fff"
+                        textColor="#000"
+                        IconLeft={GoogleIcon}
+                        disabled={isLoading}
+                    />
 
-                <CustomButton
-                    title="Continue with Apple"
-                    onPress={handleApplePress}
-                    bgColor="#fff"
-                    textVariant="secondary"
-                    IconLeft={AppleIcon}
-                    disabled={isLoading}
-                />
+                    <CustomButton
+                        title="Continue with Apple"
+                        onPress={handleApplePress}
+                        bgColor="#000"
+                        textColor="#fff"
+                        IconLeft={AppleIcon}
+                        disabled={isLoading}
+                    />
 
-                <CustomButton
-                    title="Continue with Facebook"
-                    onPress={handleFacebookPress}
-                    bgColor="#fff"
-                    textVariant="success"
-                    IconLeft={FacebookIcon}
-                    disabled={isLoading}
-                />
+                    <CustomButton
+                        title="Continue with Facebook"
+                        onPress={handleFacebookPress}
+                        bgColor="#1877F2"
+                        textColor="#fff"
+                        IconLeft={FacebookIcon}
+                        disabled={isLoading}
+                    />
 
-                <CustomButton
-                    title="Email address"
-                    onPress={handleEmailPress}
-                    bgColor="#fff"
-                    textVariant="primary"
-                    IconLeft={EmailIcon}
-                />
+                    <CustomButton
+                        title="Continue with Email"
+                        onPress={handleEmailPress}
+                        bgColor="#f1f1f1"
+                        textColor="#000"
+                        IconLeft={EmailIcon}
+                    />
+                </View>
 
+                {/* Separator */}
+                <View style={styles.separator}>
+                    <View style={styles.separatorLine} />
+                    <Text style={styles.separatorText}>or</Text>
+                    <View style={styles.separatorLine} />
+                </View>
 
-                {/* Sign Button (assuming a sign-up action) */}
-                <CustomButton
-                    title="Sign Up"
-                    onPress={() => router.replace("/(auth)/sign-up")}
-                    bgVariant="success"
-                    textVariant="default"
-                />
+                {/* Account Actions Section */}
+                <View style={styles.accountSection}>
+                    <CustomButton
+                        title="Create Account"
+                        onPress={() => router.replace("/(auth)/sign-up")}
+                        bgVariant="success"
+                        textVariant="default"
+                    />
 
-                {/* Login Link */}
-                <TouchableOpacity onPress={handleLoginPress}>
-                    <Text style={styles.loginText}>Have an account? Log in</Text>
-                </TouchableOpacity>
+                    {/* Login Link */}
+                    <TouchableOpacity onPress={handleLoginPress}>
+                        <Text style={styles.loginText}>Already have an account? Sign in</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -161,6 +171,31 @@ const styles = StyleSheet.create({
         color: "#000000",
         fontSize: 16,
         fontFamily: "PlusJakartaSans-Bold",
+    },
+    ssoSection: {
+        width: "100%",
+        marginBottom: 20,
+    },
+    separator: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 20,
+        width: "100%",
+    },
+    separatorLine: {
+        flex: 1,
+        height: 1,
+        backgroundColor: "#E5E5E5",
+    },
+    separatorText: {
+        marginHorizontal: 15,
+        color: "#666666",
+        fontSize: 14,
+        fontFamily: "PlusJakartaSans-Regular",
+    },
+    accountSection: {
+        width: "100%",
+        alignItems: "center",
     },
 
 });
