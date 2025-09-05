@@ -22,7 +22,7 @@ const Home = () => {
             {/* Skip button to navigate directly to sign-up */}
             <TouchableOpacity
                 onPress={() => {
-                    router.replace("/(auth)/sign-up");
+                    router.replace("/(auth)/letsGetStarted");
                 }}
                 style={styles.skipButton}
             >
@@ -62,7 +62,7 @@ const Home = () => {
                 title={isLastSlide ? "Get Started" : "Next"}
                 onPress={() =>
                     isLastSlide
-                        ? router.replace("/(auth)/sign-up")
+                        ? router.replace("/(auth)/letsGetStarted")
                         : swiperRef.current?.scrollBy(1)
                 }
 

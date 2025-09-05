@@ -2,12 +2,30 @@ import onboarding1 from "@assets/images/onboarding1.png";
 import onboarding2 from "@assets/images/onboarding2.png";
 import onboarding3 from "@assets/images/onboarding3.gif";
 
+// icons import here
+import facebookIcon from "@assets/icons/facebookicon.png";
+import googleIcon from "@assets/icons/google.png";
+import appleIcon from "@assets/icons/appleicon.png";
+import emailIcon from "@assets/icons/email.png";
+
+export const icons = {
+    facebookIcon,
+    googleIcon,
+    appleIcon,
+    emailIcon,
+}
+
+
+
+
 
 export const images = {
     onboarding1,
     onboarding2,
     onboarding3,
 }
+
+
 export const onboarding = [
     {
         id: 1,

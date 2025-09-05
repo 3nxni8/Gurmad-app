@@ -51,9 +51,10 @@ const CustomButton = ({
             onPress={onPress}
             style={[
                 {
-                    width: "85%",
+                    width: "100%",
                     borderRadius: 25,
                     padding: 12,
+                    marginVertical: 6,
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",

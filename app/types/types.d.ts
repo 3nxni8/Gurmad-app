@@ -55,11 +55,15 @@ declare interface Ride {
 
 declare interface ButtonProps extends TouchableOpacityProps {
     title: string;
-    bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
+    bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success" | "general";
     textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
     IconLeft?: React.ComponentType<any>;
     IconRight?: React.ComponentType<any>;
     className?: string;
+    /** Optional override for background color (takes precedence over bgVariant) */
+    bgColor?: string;
+    /** Optional override for text color (takes precedence over textVariant) */
+    textColor?: string;
 }
 
 declare interface GoogleInputProps {
