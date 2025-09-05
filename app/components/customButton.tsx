@@ -43,44 +43,59 @@ const CustomButton = ({
                           textVariant = "default",
                           IconLeft,
                           IconRight,
-                          className, // Note: className is ignored as we’re using inline styles
+                          className,
+                          bgColor,
+                          textColor,
                           ...props
                       }: ButtonProps) => {
+    // Determine background style - bgColor prop overrides bgVariant
+    const backgroundStyle = bgColor ? { backgroundColor: bgColor } : getBgVariantStyle(bgVariant);
+    
+    // Determine text style - textColor prop overrides textVariant
+    const textStyle = textColor ? { color: textColor } : getTextVariantStyle(textVariant);
+    
     return (
         <TouchableOpacity
             onPress={onPress}
             style={[
                 {
                     width: "100%",
-                    borderRadius: 25,
-                    padding: 12,
-                    marginVertical: 6,
+                    borderRadius: 12,
+                    paddingVertical: 16,
+                    paddingHorizontal: 20,
+                    marginVertical: 8,
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
                     shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 4,
-                    elevation: 4, // For Android shadow
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 3,
+                    elevation: 2, // For Android shadow
                 },
-                getBgVariantStyle(bgVariant),
+                backgroundStyle,
             ]}
             {...props}
         >
-            {IconLeft && <IconLeft />}
+            {IconLeft && (
+                <IconLeft style={{ marginRight: 12, width: 20, height: 20 }} />
+            )}
             <Text
                 style={[
                     {
-                        fontSize: 18,
-                        fontWeight: "bold",
+                        fontSize: 16,
+                        fontWeight: "600",
+                        textAlign: "center",
+                        flex: 1,
                     },
-                    getTextVariantStyle(textVariant),
+                    textStyle,
                 ]}
             >
                 {title}
             </Text>
-            {IconRight && <IconRight />}
+            {IconRight && (
+                <IconRight style={{ marginLeft: 12, width: 20, height: 20 }} />
+            )}
         </TouchableOpacity>
     );
 };
