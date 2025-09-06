@@ -3,49 +3,55 @@ import {
     SafeAreaView,
     Text,
     View,
-    StyleSheet} from 'react-native';
+    StyleSheet,
+    Alert,
+} from 'react-native';
 import {useState} from "react";
-// import { useSignUp } from "@clerk/clerk-expo";
+import { useSignIn } from "@clerk/clerk-expo";
 import InputField from "@/components/inputField";
 import CustomButton from "@/components/customButton";
 import { icons} from "@/constants";
-// import { router } from "expo-router";
+import { router } from "expo-router";
 
-const SignUp = () => {
-    // const {isLoaded, signUp, setActive} = useSignUp();
+const SignIn = () => {
+    const { isLoaded, signIn, setActive } = useSignIn();
 
     const [form, setForm] = useState({
-        name: '',
         email: '',
         password: ''
     });
-    // const onSignUpPress = async () => {
-    //     if (!isLoaded) return;
-    //     try {s
-    //         await signUp.create({
-    //             firstName: form.name,
-    //             emailAddress: form.email,
-    //             password: form.password,
-    //         });
-    //
-    //         // Set the user's email address
-    //         await signUp.prepareEmailAddressVerification({ emailAddress: form.email });
-    //
-    //         // Navigate to the verification screen or directly sign in if no verification needed
-    //         if (setActive) {
-    //             await setActive({ session: signUp.createdSessionId });
-    //             router.replace("/(roots)/(tabs)/home");
-    //         }
-    //     } catch (err) {
-    //         console.error("Error during sign up:", err);
-    //     }
-    // };
+
+    const onSignInPress = async () => {
+        if (!isLoaded) return;
+
+        try {
+            const signInAttempt = await signIn.create({
+                identifier: form.email,
+                password: form.password,
+            });
+
+            if (signInAttempt.status === 'complete') {
+                await setActive({ session: signInAttempt.createdSessionId });
+                router.replace("/(roots)/(tabs)/home");
+            } else {
+                // See https://clerk.com/docs/custom-flows/error-handling
+                // for more info on error handling
+                console.error(JSON.stringify(signInAttempt, null, 2));
+            }
+        } catch (err: any) {
+            console.error(JSON.stringify(err, null, 2));
+            Alert.alert("Error", err.errors[0].longMessage);
+        }
+    };
+
+    // Check if form is filled to determine button styling
+    const isFormFilled = form.email.trim() !== '' && form.password.trim() !== '';
 
     return (
         <ScrollView style={styles.scrollView}>
             <SafeAreaView style={styles.container}>
                 <View style={styles.formContainer}>
-                    <Text style={styles.headerText}>Create Your Account</Text>
+                    <Text style={styles.headerText}>Welcome Back</Text>
 
                     <InputField
                         label="Email"
@@ -69,9 +75,10 @@ const SignUp = () => {
                     />
 
                     <CustomButton
-                        title="Sign Up"
-                        onPress={() => console.log('Sign up pressed')}
-
+                        title="Sign In"
+                        onPress={onSignInPress}
+                        bgColor={isFormFilled && isLoaded ? "#168F4D" : "#9CA3AF"}
+                        style={styles.button}
                     />
                 </View>
             </SafeAreaView>
@@ -98,7 +105,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontFamily: 'PlusJakartaSans-Bold',
     },
-
-
+    button: {
+        marginTop: 24,
+    }
 });
-export default SignUp;
+export default SignIn;

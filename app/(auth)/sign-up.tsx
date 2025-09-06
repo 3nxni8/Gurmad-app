@@ -53,6 +53,9 @@ const SignUp = () => {
         }
     };
 
+    // Check if form is filled to determine button styling
+    const isFormFilled = form.FullName.trim() !== '' && form.email.trim() !== '' && form.password.trim() !== '';
+
     const onPressVerify = async () => {
         if (!isLoaded) return;
         try {
@@ -130,6 +133,7 @@ const SignUp = () => {
                     <CustomButton
                         title="Sign Up"
                         onPress={onSignUpPress}
+                        bgColor={isFormFilled && isLoaded ? "#168F4D" : "#9CA3AF"}
                         style={styles.button}
                     />
                 </View>
@@ -147,37 +151,21 @@ const SignUp = () => {
                         borderRadius: 16,
                         overflow: 'hidden'
                     }}>
-                        {/* Header Image Section */}
-                        <View style={{ position: 'relative', width: '100%', height: 150 }}>
-                            {/*<Image*/}
-                            {/*    source={images.verificationHeader || images.onboarding1} // Fallback to onboarding1 if verificationHeader doesn't exist*/}
-                            {/*    style={{ zIndex: 0, width: '100%', height: 150 }}*/}
-                            {/*/>*/}
-                            <Text style={{
-                                fontSize: 24,
-                                color: 'black',
-                                fontFamily: 'PlusJakartaSans-Bold',
-                                fontWeight: '600',
-                                position: 'absolute',
-                                bottom: 20,
-                                left: 20
-                            }}>
-                                Verification
-                            </Text>
-                        </View>
-                        {/* Content Section */}
-                        <View style={{ padding: 20, minHeight: 300 }}>
+                        {/* Content Section - Similar to Sign Screen */}
+                        <View style={styles.formContainer}>
+                            <Text style={styles.headerText}>Verification</Text>
                             <Text style={{
                                 fontFamily: 'PlusJakartaSans-Regular',
                                 fontSize: 16,
+                                color: '#9ca3af',
                                 marginBottom: 20
                             }}>
-                                We've sent a verification code to {form.email}.
+                                Code has been sent to {form.email}
                             </Text>
                             <InputField
-                                label="Code"
+                                label="Verification Code"
                                 icon={icons.lock}
-                                placeholder="12345"
+                                placeholder="Enter verification code"
                                 value={verification.code}
                                 keyboardType="numeric"
                                 onChangeText={(code) =>
@@ -196,7 +184,8 @@ const SignUp = () => {
                             <CustomButton
                                 title="Verify Email"
                                 onPress={onPressVerify}
-                                style={{ marginTop: 24, backgroundColor: '#22c55e' }}
+                                bgColor={verification.code.trim() !== '' ? "#168F4D" : "#9CA3AF"}
+                                style={{ marginTop: 24 }}
                             />
                         </View>
                     </View>
