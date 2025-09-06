@@ -1,6 +1,15 @@
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
+import "react-native-reanimated"
+
+
+
+import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
+import { Slot } from 'expo-router'
+
+const publishableKey = process.env.Expo_PUBLISHABLE_KEY!
+
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -15,6 +24,11 @@ export default function RootLayout() {
     'PlusJakartaSans-Light': require('../assets/fonts/PlusJakartaSans-Light.ttf'),
   });
 
+
+
+    if (!publishableKey) {
+        throw new Error('Missing Publishable Key. Please set the PUBLIC_KEY environment variable.')
+    }
   // Hide splash screen once fonts are loaded
   useEffect(() => {
     if (loaded) {
@@ -28,10 +42,14 @@ export default function RootLayout() {
   }
 
   return (
+    <ClerkProvider publishableKey={publishableKey}>
+        <ClerkLoaded>
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="(roots)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
     </Stack>
+        </ClerkLoaded>
+    </ClerkProvider>
   );
 }

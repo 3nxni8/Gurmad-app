@@ -114,7 +114,7 @@ const LetsGetStarted = () => {
                     {/* Login Link */}
                     <View style={styles.loginRow}>
                         <Text style={styles.loginText}>Already have an account?</Text>
-                        <Link href="/login" asChild>
+                        <Link href="/(auth)/log-in">
                             <Text style={styles.loginTextBlue}> Log in</Text>
                         </Link>
                     </View>

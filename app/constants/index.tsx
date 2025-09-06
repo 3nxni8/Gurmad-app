@@ -6,13 +6,20 @@ import onboarding3 from "@assets/images/onboarding3.gif";
 import facebookIcon from "@assets/icons/facebookicon.png";
 import googleIcon from "@assets/icons/googleicon.png";
 import appleIcon from "@assets/icons/appleicon.png";
-import emailIcon from "@assets/icons/email.png";
+import person from "@assets/icons/person.png";
+import lock from "@assets/icons/lock.png";
+import email from "@assets/icons/email.png";
+
+
 
 export const icons = {
     facebookIcon,
     googleIcon,
     appleIcon,
-    emailIcon,
+    person,
+    lock,
+    email,
+
 }
 
 

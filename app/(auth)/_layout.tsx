@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Redirect,Stack } from 'expo-router';
 
 
 const Layout = () => {
@@ -7,7 +7,7 @@ const Layout = () => {
       <Stack.Screen name="welcome" options={{ headerShown: false }}  />
       <Stack.Screen name="sign-up" options={{ headerShown: false }} />
       <Stack.Screen name="letsGetStarted" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="log-in" options={{ headerShown: false }} />
     </Stack>
   );
 }
