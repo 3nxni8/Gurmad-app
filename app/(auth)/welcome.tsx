@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
@@ -15,22 +15,44 @@ const Home = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const insets = useSafeAreaInsets();
 
+    // Handle swiper index changes with validation
+    const handleIndexChanged = useCallback((index: number) => {
+        if (index >= 0 && index < onboarding.length) {
+            setActiveIndex(index);
+        }
+    }, []);
+    
     // Check if the current slide is the last one
     const isLastSlide = activeIndex === onboarding.length - 1;
 
-    const goNext = () => {
+    const goNext = useCallback(() => {
         if (isLastSlide) {
             router.replace("/(auth)/letsGetStarted");
             return;
         }
-        const swiper = swiperRef.current as any;
-        if (!swiper) return;
-        if (typeof swiper.scrollBy === "function") {
-            swiper.scrollBy(1, true);
-        } else if (typeof swiper.scrollTo === "function") {
-            swiper.scrollTo(activeIndex + 1, true);
+        
+        // Use a more reliable approach to navigate to the next slide
+        if (swiperRef.current) {
+            const nextIndex = activeIndex + 1;
+            if (nextIndex < onboarding.length) {
+                // Use scrollTo with the absolute next index
+                try {
+                    swiperRef.current.scrollTo(nextIndex, true);
+                } catch (error) {
+                    console.warn("Error scrolling swiper:", error);
+                    // Fallback: manually update activeIndex to keep UI consistent
+                    setActiveIndex(nextIndex);
+                }
+            }
+        } else {
+            // If swiper ref is not available, at least update the state
+            console.warn("Swiper ref not available, updating state only");
+            const nextIndex = activeIndex + 1;
+            if (nextIndex < onboarding.length) {
+                setActiveIndex(nextIndex);
+            }
         }
-    };
+    }, [isLastSlide, activeIndex]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -55,8 +77,10 @@ const Home = () => {
                     loop={false}
                     dot={<View style={styles.dot} />}
                     activeDot={<View style={styles.activeDot} />}
-                    onIndexChanged={(index) => setActiveIndex(index)}
+                    onIndexChanged={handleIndexChanged}
                     style={{ flex: 1 }}
+                    index={activeIndex}
+                    showsPagination={true}
                 >
                     {onboarding.map((item) => (
                         // Individual slide for each onboarding item
