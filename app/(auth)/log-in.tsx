@@ -5,108 +5,170 @@ import {
     View,
     StyleSheet,
     Alert,
-} from 'react-native';
-import {useState} from "react";
-import { useSignIn } from "@clerk/clerk-expo";
+    TouchableOpacity,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
+import { useState } from "react";
+import { Link, router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import InputField from "@/components/inputField";
 import CustomButton from "@/components/customButton";
-import { icons} from "@/constants";
-import { router } from "expo-router";
+import { icons } from "@/constants";
 
-const SignIn = () => {
-    const { isLoaded, signIn, setActive } = useSignIn();
-
+const LogIn = () => {
+    const insets = useSafeAreaInsets();
     const [form, setForm] = useState({
-        email: '',
-        password: ''
+        email: "",
+        password: "",
     });
 
-    const onSignInPress = async () => {
-        if (!isLoaded) return;
-
-        try {
-            const signInAttempt = await signIn.create({
-                identifier: form.email,
-                password: form.password,
-            });
-
-            if (signInAttempt.status === 'complete') {
-                await setActive({ session: signInAttempt.createdSessionId });
-                router.replace("/(roots)/(tabs)/home");
-            } else {
-                // See https://clerk.com/docs/custom-flows/error-handling
-                // for more info on error handling
-                console.error(JSON.stringify(signInAttempt, null, 2));
-            }
-        } catch (err: any) {
-            console.error(JSON.stringify(err, null, 2));
-            Alert.alert("Error", err.errors[0].longMessage);
+    // Handle Log In button press to navigate to home screen
+    const onLogInPress = () => {
+        if (!isFormFilled) {
+            Alert.alert("Error", "Please fill out all fields");
+            return;
         }
+        // Navigate to home tabs (group segments are omitted at runtime, but this path is kept if your router expects it)
+        router.push("/(roots)/(tabs)/home");
     };
 
-    // Check if form is filled to determine button styling
-    const isFormFilled = form.email.trim() !== '' && form.password.trim() !== '';
+    // Check if form is filled to determine button state
+    const isFormFilled = form.email.trim() !== "" && form.password.trim() !== "";
 
     return (
-        <ScrollView style={styles.scrollView}>
+        <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: "white" }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={0}
+        >
             <SafeAreaView style={styles.container}>
-                <View style={styles.formContainer}>
-                    <Text style={styles.headerText}>Welcome Back</Text>
+                {/* Content */}
+                <View style={{ flex: 1 }}>
+                    <ScrollView
+                        style={styles.scrollView}
+                        contentContainerStyle={styles.scrollContent}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        <View style={styles.formContainer}>
+                            <View style={styles.headerRow}>
+                                {/* Use router.back() to go to the previous screen */}
+                                <TouchableOpacity onPress={() => router.back()}>
+                                    <Image
+                                        source={icons.backArrow}
+                                        style={{ width: 24, height: 24, marginRight: 12 }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
 
-                    <InputField
-                        label="Email"
-                        placeholder="Enter email"
-                        icon={icons.email}
-                        textContentType="emailAddress"
-                        value={form.email}
-                        onChangeText={(value) => setForm({ ...form, email: value })}
-                        marginTop={16}
-                    />
+                            <Text style={styles.headerText}>Welcome Back 👋</Text>
+                            <Text style={styles.descriptionText}>Log in to continue</Text>
 
-                    <InputField
-                        label="Password"
-                        placeholder="Enter password"
-                        icon={icons.lock}
-                        secureTextEntry={true}
-                        textContentType="password"
-                        value={form.password}
-                        onChangeText={(value) => setForm({ ...form, password: value })}
-                        marginTop={16}
-                    />
+                            <InputField
+                                label="Email"
+                                placeholder="Enter email"
+                                icon={icons.email}
+                                textContentType="emailAddress"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                value={form.email}
+                                onChangeText={(value) => setForm({ ...form, email: value })}
+                            />
 
+                            <InputField
+                                label="Password"
+                                placeholder="Enter password"
+                                icon={icons.lock}
+                                secureTextEntry={true}
+                                textContentType="password"
+                                value={form.password}
+                                onChangeText={(value) => setForm({ ...form, password: value })}
+                                marginVertical={16}
+                            />
+
+                            {/* Sign Up Link */}
+                            <View style={styles.loginRow}>
+                                <Text style={styles.loginText}>Don't have an account?</Text>
+                                <Link href="/sign-up">
+                                    <Text style={styles.loginTextBlue}> Sign Up</Text>
+                                </Link>
+                            </View>
+                        </View>
+                    </ScrollView>
+                </View>
+
+                {/* Bottom Action - pinned, moves with keyboard */}
+                <View style={[styles.bottomAction, { paddingBottom: Math.max(insets.bottom, 12) }]}>
                     <CustomButton
-                        title="Sign In"
-                        onPress={onSignInPress}
-                        bgColor={isFormFilled && isLoaded ? "#168F4D" : "#9CA3AF"}
-                        style={styles.button}
+                        title="Log In"
+                        onPress={onLogInPress}
+                        disabled={!isFormFilled}
+                        accessibilityLabel="Log in"
                     />
                 </View>
             </SafeAreaView>
-        </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
 const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: "white",
+    },
+    scrollContent: {
+        paddingBottom: 24,
     },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: "white",
     },
     formContainer: {
         padding: 20,
         paddingTop: 20,
     },
+
+    loginRow: {
+        justifyContent: "center",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    loginText: {
+        color: "#6B7280",
+        fontSize: 16,
+        fontFamily: "PlusJakartaSans-Bold",
+    },
+    loginTextBlue: {
+        color: "#0286FF",
+        fontSize: 16,
+        textDecorationLine: "underline",
+        fontFamily: "PlusJakartaSans-Bold",
+    },
     headerText: {
         fontSize: 24,
-        fontWeight: '700',
-        marginBottom: 20,
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontWeight: "700",
+        marginBottom: 6,
+        fontFamily: "PlusJakartaSans-Bold",
     },
-    button: {
-        marginTop: 24,
-    }
+    descriptionText: {
+        fontSize: 16,
+        color: "#6B7280",
+        marginBottom: 12,
+    },
+    headerRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    bottomAction: {
+        paddingHorizontal: 20,
+        paddingTop: 8,
+        backgroundColor: "white",
+        borderTopWidth: 0.5,
+        borderTopColor: "#E5E7EB",
+    },
 });
-export default SignIn;
+
+export default LogIn;

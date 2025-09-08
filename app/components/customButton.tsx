@@ -48,12 +48,24 @@ const CustomButton = ({
                           textColor,
                           ...props
                       }: ButtonProps) => {
+    const isDisabled = !!props.disabled;
+
     // Determine background style - bgColor prop overrides bgVariant
-    const backgroundStyle = bgColor ? { backgroundColor: bgColor } : getBgVariantStyle(bgVariant);
-    
+    const baseBackgroundStyle = bgColor ? { backgroundColor: bgColor } : getBgVariantStyle(bgVariant);
+
+    // Apply a consistent disabled background unless overridden by bgColor
+    const backgroundStyle = isDisabled && !bgColor
+        ? { backgroundColor: "#9CA3AF" } // neutral-400 when disabled
+        : baseBackgroundStyle;
+
     // Determine text style - textColor prop overrides textVariant
-    const textStyle = textColor ? { color: textColor } : getTextVariantStyle(textVariant);
-    
+    const baseTextStyle = textColor ? { color: textColor } : getTextVariantStyle(textVariant);
+
+    // Apply a consistent disabled text color unless overridden by textColor
+    const textStyle = isDisabled && !textColor
+        ? { color: "#F3F4F6" } // gray-100 on disabled
+        : baseTextStyle;
+
     return (
         <TouchableOpacity
             onPress={onPress}
@@ -76,6 +88,7 @@ const CustomButton = ({
                 },
                 backgroundStyle,
             ]}
+            accessibilityState={{ disabled: isDisabled }}
             {...props}
         >
             {IconLeft && (

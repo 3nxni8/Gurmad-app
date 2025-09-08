@@ -5,255 +5,185 @@ import {
     View,
     StyleSheet,
     Alert,
-} from 'react-native';
+    TouchableOpacity,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
 import { useState } from "react";
-import { useSignUp } from "@clerk/clerk-expo";
+import { Link, router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import InputField from "@/components/inputField";
 import CustomButton from "@/components/customButton";
-import { icons, images } from "@/constants";
-import { fetchAPI } from "@/lib/fetch";
-import { router } from "expo-router";
-import ReactNativeModal from 'react-native-modal';
+import { icons } from "@/constants";
 
 const SignUp = () => {
-    const { isLoaded, signUp, setActive } = useSignUp();
-
+    const insets = useSafeAreaInsets();
     const [form, setForm] = useState({
-        FullName: '',
-        email: '',
-        password: '',
+        email: "",
+        password: "",
+        confirmPassword: "",
     });
 
-    const [verification, setVerification] = useState({
-        state: "default",
-        error: "",
-        code: "",
-    });
-
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-    const onSignUpPress = async () => {
-        if (!isLoaded) return;
-        try {
-            await signUp.create({
-                emailAddress: form.email,
-                password: form.password,
-            });
-
-            // Set the user's email address
-            await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-            setVerification({
-                ...verification,
-                state: "pending",
-            });
-
-        } catch (err: any) {
-            console.log(JSON.stringify(err, null, 2));
-            Alert.alert("Error During SignUp", err.errors[0].longMessage);
+    // Handle Log In button press to navigate to home screen
+    const onSignUpPress = () => {
+        if (!isFormFilled) {
+            Alert.alert("Error", "Please fill out all fields");
+            return;
         }
+        if (form.password !== form.confirmPassword) {
+            Alert.alert("Error", "Passwords do not match");
+            return;
+        }
+        // Navigate to verify screen (route groups like (auth) are omitted in paths)
+        router.replace("/(auth)/verify");
     };
 
-    // Check if form is filled to determine button styling
-    const isFormFilled = form.FullName.trim() !== '' && form.email.trim() !== '' && form.password.trim() !== '';
-
-    const onPressVerify = async () => {
-        if (!isLoaded) return;
-        try {
-            const completeSignUp = await signUp.attemptEmailAddressVerification({
-                code: verification.code,
-            });
-            if (completeSignUp.status === "complete") {
-                await fetchAPI("/(api)/user", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        name: form.FullName,
-                        email: form.email,
-                        clerkId: completeSignUp.createdUserId,
-                    }),
-                });
-                await setActive({ session: completeSignUp.createdSessionId });
-                setVerification({
-                    ...verification,
-                    state: "success",
-                });
-            } else {
-                setVerification({
-                    ...verification,
-                    error: "Verification failed. Please try again.",
-                    state: "failed",
-                });
-            }
-        } catch (err: any) {
-            // See https://clerk.com/docs/custom-flows/error-handling
-            // for more info on error handling
-            setVerification({
-                ...verification,
-                error: err.errors[0].longMessage,
-                state: "failed",
-            });
-        }
-    };
+    // Check if form is filled to determine button state
+    const isFormFilled = form.email.trim() !== "" && form.password.trim() !== "";
 
     return (
-        <ScrollView style={styles.scrollView}>
+        <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: "white" }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={0}
+        >
             <SafeAreaView style={styles.container}>
-                <View style={styles.formContainer}>
-                    <Text style={styles.headerText}>Create Your Account</Text>
+                {/* Content */}
+                <View style={{ flex: 1 }}>
+                    <ScrollView
+                        style={styles.scrollView}
+                        contentContainerStyle={styles.scrollContent}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        <View style={styles.formContainer}>
+                            <View style={styles.headerRow}>
+                                {/* Use router.back() to go to the previous screen */}
+                                <TouchableOpacity onPress={() => router.back()}>
+                                    <Image
+                                        source={icons.backArrow}
+                                        style={{ width: 24, height: 24, marginRight: 12 }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
 
-                    <InputField
-                        label="FullName"
-                        placeholder="Enter name"
-                        icon={icons.person}
-                        value={form.FullName}
-                        onChangeText={(value) => setForm({ ...form, FullName: value })}
-                        isFirst={true}
-                    />
+                            <Text style={styles.headerText}>Create an Account👋</Text>
+                            <Text style={styles.descriptionText}>Join our community and start making a real difference</Text>
 
-                    <InputField
-                        label="Email"
-                        placeholder="Enter email"
-                        icon={icons.email}
-                        textContentType="emailAddress"
-                        value={form.email}
-                        onChangeText={(value) => setForm({ ...form, email: value })}
-                        marginTop={16}
-                    />
+                            <InputField
+                                label="Email"
+                                placeholder="Enter email"
+                                icon={icons.email}
+                                textContentType="emailAddress"
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                value={form.email}
+                                onChangeText={(value) => setForm({ ...form, email: value })}
+                            />
 
-                    <InputField
-                        label="Password"
-                        placeholder="Enter password"
-                        icon={icons.lock}
-                        secureTextEntry={true}
-                        textContentType="password"
-                        value={form.password}
-                        onChangeText={(value) => setForm({ ...form, password: value })}
-                        marginTop={16}
-                    />
+                            <InputField
+                                label="Password"
+                                placeholder="Enter password"
+                                icon={icons.lock}
+                                secureTextEntry={true}
+                                textContentType="password"
+                                value={form.password}
+                                onChangeText={(value) => setForm({ ...form, password: value })}
+                                marginVertical={16}
+                            />
+                            <InputField
+                                label="Confirm Password"
+                                placeholder="Confirm password"
+                                icon={icons.lock}
+                                secureTextEntry={true}
+                                textContentType="password"
+                                value={form.confirmPassword}
+                                onChangeText={(value) => setForm({ ...form, password: value })}
+                                marginVertical={16}
+                            />
 
+                            {/* Sign Up Link */}
+                            <View style={styles.signupRow}>
+                                <Text style={styles.signupText}>Already have an account</Text>
+                                <Link href="/sign-up">
+                                    <Text style={styles.signupTextBlue}> Log In</Text>
+                                </Link>
+                            </View>
+                        </View>
+                    </ScrollView>
+                </View>
+
+                {/* Bottom Action - pinned, moves with keyboard */}
+                <View style={[styles.bottomAction, { paddingBottom: Math.max(insets.bottom, 12) }]}>
                     <CustomButton
-                        title="Sign Up"
+                        title="Log In"
                         onPress={onSignUpPress}
-                        bgColor={isFormFilled && isLoaded ? "#168F4D" : "#9CA3AF"}
-                        style={styles.button}
+                        disabled={!isFormFilled}
+                        accessibilityLabel="Log in"
                     />
                 </View>
-                <ReactNativeModal
-                    isVisible={verification.state === "pending"}
-                    onModalHide={() => {
-                        if (verification.state === "success") {
-                            setShowSuccessModal(true);
-                        }
-                    }}
-                >
-                    <View style={{
-                        flex: 1,
-                        backgroundColor: 'white',
-                        borderRadius: 16,
-                        overflow: 'hidden'
-                    }}>
-                        {/* Content Section - Similar to Sign Screen */}
-                        <View style={styles.formContainer}>
-                            <Text style={styles.headerText}>Verification</Text>
-                            <Text style={{
-                                fontFamily: 'PlusJakartaSans-Regular',
-                                fontSize: 16,
-                                color: '#9ca3af',
-                                marginBottom: 20
-                            }}>
-                                Code has been sent to {form.email}
-                            </Text>
-                            <InputField
-                                label="Verification Code"
-                                icon={icons.lock}
-                                placeholder="Enter verification code"
-                                value={verification.code}
-                                keyboardType="numeric"
-                                onChangeText={(code) =>
-                                    setVerification({ ...verification, code })
-                                }
-                            />
-                            {verification.error && (
-                                <Text style={{
-                                    color: '#ef4444',
-                                    fontSize: 14,
-                                    marginTop: 4
-                                }}>
-                                    {verification.error}
-                                </Text>
-                            )}
-                            <CustomButton
-                                title="Verify Email"
-                                onPress={onPressVerify}
-                                bgColor={verification.code.trim() !== '' ? "#168F4D" : "#9CA3AF"}
-                                style={{ marginTop: 24 }}
-                            />
-                        </View>
-                    </View>
-                </ReactNativeModal>
-
-                <ReactNativeModal isVisible={showSuccessModal}>
-                    <View style={{
-                        flex: 1,
-                        backgroundColor: 'white',
-                        borderRadius: 16,
-                        overflow: 'hidden'
-                    }}>
-                        {/* Content Section */}
-                        <View style={{ padding: 20, minHeight: 300 }}>
-                            <Text style={{
-                                fontSize: 30,
-                                fontFamily: 'PlusJakartaSans-Bold',
-                                fontWeight: '700',
-                                textAlign: 'center',
-                                marginBottom: 8
-                            }}>
-                                Verified
-                            </Text>
-                            <Text style={{
-                                fontSize: 16,
-                                color: '#9ca3af',
-                                fontFamily: 'PlusJakartaSans-Regular',
-                                textAlign: 'center',
-                                marginBottom: 20
-                            }}>
-                                You have successfully verified your account.
-                            </Text>
-                            <CustomButton
-                                title="Browse Home"
-                                onPress={() => router.push(`/(roots)/(tabs)/home`)}
-                                style={{ marginTop: 24 }}
-                            />
-                        </View>
-                    </View>
-                </ReactNativeModal>
-
             </SafeAreaView>
-        </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
 const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: "white",
+    },
+    scrollContent: {
+        paddingBottom: 24,
     },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: "white",
     },
     formContainer: {
         padding: 20,
         paddingTop: 20,
     },
+
+    signupRow: {
+        justifyContent: "center",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    signupText: {
+        color: "#6B7280",
+        fontSize: 16,
+        fontFamily: "PlusJakartaSans-Bold",
+    },
+    signupTextBlue: {
+        color: "#0286FF",
+        fontSize: 16,
+        textDecorationLine: "underline",
+        fontFamily: "PlusJakartaSans-Bold",
+    },
     headerText: {
         fontSize: 24,
-        fontWeight: '700',
-        marginBottom: 20,
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontWeight: "700",
+        marginBottom: 6,
+        fontFamily: "PlusJakartaSans-Bold",
     },
-    button: {
-        marginTop: 24,
-    }
+    descriptionText: {
+        fontSize: 16,
+        color: "#6B7280",
+        marginBottom: 12,
+    },
+    headerRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    bottomAction: {
+        paddingHorizontal: 20,
+        paddingTop: 8,
+        backgroundColor: "white",
+        borderTopWidth: 0.5,
+        borderTopColor: "#E5E7EB",
+    },
 });
 
 export default SignUp;

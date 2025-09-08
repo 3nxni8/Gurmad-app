@@ -6,9 +6,9 @@ import "react-native-reanimated"
 
 
 import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
-import { Slot } from 'expo-router'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-const publishableKey = process.env.Expo_PUBLISHABLE_KEY!
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
 
 // Prevent the splash screen from auto-hiding
@@ -44,11 +44,13 @@ export default function RootLayout() {
   return (
     <ClerkProvider publishableKey={publishableKey}>
         <ClerkLoaded>
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(roots)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-    </Stack>
+            <SafeAreaProvider>
+                <Stack>
+                  <Stack.Screen name="index" options={{ headerShown: false }} />
+                  <Stack.Screen name="(roots)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                </Stack>
+            </SafeAreaProvider>
         </ClerkLoaded>
     </ClerkProvider>
   );

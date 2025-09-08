@@ -9,6 +9,7 @@ import appleIcon from "@assets/icons/appleicon.png";
 import person from "@assets/icons/person.png";
 import lock from "@assets/icons/lock.png";
 import email from "@assets/icons/email.png";
+import backArrow from "@assets/icons/backAarrow.png";
 
 
 
@@ -19,6 +20,7 @@ export const icons = {
     person,
     lock,
     email,
+    backArrow
 
 }
 

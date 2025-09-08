@@ -3,10 +3,6 @@ import {
     View,
     Text,
     Image,
-    KeyboardAvoidingView,
-    TouchableWithoutFeedback,
-    Keyboard,
-    Platform,
     StyleSheet,
 } from "react-native";
 import { useState } from "react";
@@ -22,8 +18,9 @@ const InputField = ({
                         inputStyle,
                         iconStyle,
                         backgroundColor = "#F1f4f8",
-                        borderColor = "#F5F5F5",
+                        borderColor = "#Fafafa",
                         focusBorderColor = "#31905F",
+                        placeholderTextColor = "#6B7280",
                         fontSize = 16,
                         inputFontSize = 15,
                         marginTop = 0,
@@ -37,78 +34,73 @@ const InputField = ({
     const [isFocused, setIsFocused] = useState(false);
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        <View
+            style={[
+                styles.fieldContainer,
+                {
+                    marginBottom: marginVertical,
+                },
+                containerStyle,
+            ]}
         >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View
+            <Text
+                style={[
+                    {
+                        fontSize,
+                        fontWeight: "600",
+                        marginBottom: 8,
+                    },
+                    labelStyle,
+                ]}
+            >
+                {label}
+            </Text>
+            <View
+                style={[
+                    {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        backgroundColor,
+                        borderRadius,
+                        borderWidth,
+                        borderColor: isFocused ? focusBorderColor : borderColor,
+                    },
+                ]}
+            >
+                {icon && (
+                    <Image
+                        source={icon}
+                        style={[
+                            {
+                                width: iconSize,
+                                height: iconSize,
+                                marginLeft: 16,
+                            },
+                            iconStyle,
+                        ]}
+                    />
+                )}
+                <TextInput
                     style={[
-                        styles.fieldContainer,
                         {
-                            marginBottom: marginVertical,
+                            flex: 1,
+                            padding,
+                            fontSize: inputFontSize,
+                            fontWeight: "600",
+                            textAlign: "left",
+                            borderRadius,
                         },
-                        containerStyle,
+                        inputStyle,
                     ]}
-                >
-                    <Text
-                        style={[
-                            {
-                                fontSize,
-                                fontWeight: "600",
-                                marginBottom: 8, // Consistent spacing between label and input
-                            },
-                            labelStyle,
-                        ]}
-                    >
-                        {label}
-                    </Text>
-                    <View
-                        style={[
-                            {
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                backgroundColor,
-                                borderRadius,
-                                borderWidth,
-                                borderColor: isFocused ? focusBorderColor : borderColor,
-                            },
-                        ]}
-                    >
-                        {icon && (
-                            <Image
-                                source={icon}
-                                style={[
-                                    {
-                                        width: iconSize,
-                                        height: iconSize,
-                                        marginLeft: 16,
-                                    },
-                                    iconStyle,
-                                ]}
-                            />
-                        )}
-                        <TextInput
-                            style={[
-                                {
-                                    flex: 1,
-                                    padding,
-                                    fontSize: inputFontSize,
-                                    fontWeight: "600",
-                                    textAlign: "left",
-                                    borderRadius,
-                                },
-                                inputStyle,
-                            ]}
-                            secureTextEntry={secureTextEntry}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            {...props}
-                        />
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+                    secureTextEntry={secureTextEntry}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    placeholderTextColor={placeholderTextColor}
+                    {...props}
+                />
+            </View>
+        </View>
     );
 };
 
