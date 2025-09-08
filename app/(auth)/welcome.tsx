@@ -13,12 +13,15 @@ const Home = () => {
     const swiperRef = useRef<Swiper>(null);
     // State to track the current slide index
     const [activeIndex, setActiveIndex] = useState(0);
+    // State to prevent multiple simultaneous scroll operations
+    const [isScrolling, setIsScrolling] = useState(false);
     const insets = useSafeAreaInsets();
 
     // Handle swiper index changes with validation
     const handleIndexChanged = useCallback((index: number) => {
         if (index >= 0 && index < onboarding.length) {
             setActiveIndex(index);
+            setIsScrolling(false); // Reset scrolling state when index changes
         }
     }, []);
     
@@ -26,10 +29,14 @@ const Home = () => {
     const isLastSlide = activeIndex === onboarding.length - 1;
 
     const goNext = useCallback(() => {
+        if (isScrolling) return; // Prevent multiple simultaneous operations
+        
         if (isLastSlide) {
             router.replace("/(auth)/letsGetStarted");
             return;
         }
+        
+        setIsScrolling(true); // Set scrolling state
         
         // Use a more reliable approach to navigate to the next slide
         if (swiperRef.current) {
@@ -42,7 +49,10 @@ const Home = () => {
                     console.warn("Error scrolling swiper:", error);
                     // Fallback: manually update activeIndex to keep UI consistent
                     setActiveIndex(nextIndex);
+                    setIsScrolling(false);
                 }
+            } else {
+                setIsScrolling(false);
             }
         } else {
             // If swiper ref is not available, at least update the state
@@ -51,8 +61,9 @@ const Home = () => {
             if (nextIndex < onboarding.length) {
                 setActiveIndex(nextIndex);
             }
+            setIsScrolling(false);
         }
-    }, [isLastSlide, activeIndex]);
+    }, [isLastSlide, activeIndex, isScrolling]);
 
     return (
         <SafeAreaView style={styles.container}>
